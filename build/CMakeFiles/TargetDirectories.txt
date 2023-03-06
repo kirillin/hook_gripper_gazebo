@@ -1,0 +1,3 @@
+/home/kika/itmo/profi_2/rosws/src/hook_gripper_gazebo/build/CMakeFiles/rebuild_cache.dir
+/home/kika/itmo/profi_2/rosws/src/hook_gripper_gazebo/build/CMakeFiles/edit_cache.dir
+/home/kika/itmo/profi_2/rosws/src/hook_gripper_gazebo/build/CMakeFiles/hook_gripper_gazebo.dir

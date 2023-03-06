@@ -1,5 +1,4 @@
 #include "hook_gripper_gazebo/gazebo_ros_hook_gripper.hpp"
-#include "gazebo/msgs/msgs.hh"
 
 namespace gazebo
 {
@@ -17,7 +16,14 @@ namespace gazebo
         std::string palmLinkName = "gripper";
         this->palmLink = this->model->GetLink(palmLinkName);
 
+        this->transport_node = transport::NodePtr(new transport::Node());
+        this->transport_node->Init(this->model->GetWorld()->Name());
+        // this->transport_node->Init();
+        // std::string topicContactsName = "~/physics/contacts"; // gazebo.msgs.Contacts /gazebo/default/physics/contacts
+        // // this->contacts_sub = this->transport_node->Subscribe(topicContactsName, &HookGripperPlugin::OnMsg, this);
+        this->contacts_sub = this->transport_node->Subscribe("~/world_stats", &HookGripperPlugin::cb, this);
         
+
         update_connection = event::Events::ConnectWorldUpdateEnd(boost::bind(&HookGripperPlugin::OnUpdate, this));
         reset_connection = event::Events::ConnectWorldReset(boost::bind(&HookGripperPlugin::OnReset, this));
 
@@ -25,10 +31,22 @@ namespace gazebo
         physics::PhysicsEnginePtr physics = this->model->GetWorld()->Physics();
         this->fixedJoint = physics->CreateJoint("revolute");
     }
+    // gazebo::msgs::Vector3d msg
+    // void OnMsg(ConstContactsPtr &_msg)
+    // {
+    //     gzmsg << "_msg" << std::endl;
+    // }
+
+    void HookGripperPlugin::cb(ConstWorldStatisticsPtr &_msg)
+    {
+        std::cerr << _msg->DebugString();
+    }
 
     void HookGripperPlugin::OnReset()
     {
         gzmsg << "Reset!" << std::endl;
+
+        // this->contacts_sub = this->transport_node->Subscribe("~/world_stats", &HookGripperPlugin::cb, this);
 
         if (!attached) {
             attached = !attached;

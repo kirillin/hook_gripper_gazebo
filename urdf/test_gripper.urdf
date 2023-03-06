@@ -22,6 +22,7 @@
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <cylinder radius="0.05" length="0.1"/>
+        <!-- <<mesh filename="../mesh/hook_gripper.dae" scale="1.0"/> -->
       </geometry>
       <material name="Cyan">
         <color rgba="0 1.0 1.0 1.0"/>
@@ -50,6 +51,17 @@
       <gripper_link_name>gripper</gripper_link_name>
     </plugin>
   </gazebo>
+
+  <!-- <gazebo reference="gripper">
+    <sensor name='my_contact' type='contact'>
+      <plugin name="contact_plugin" filename="libcontact_plugin.so">
+        <contact>
+          <collision>box_collision</collision>
+        </contact>
+        <update_rate> 5 </update_rate>
+      </plugin>
+    </sensor>
+  </gazebo> -->
 
   <gazebo>
     <plugin name="ros_control" filename="libgazebo_ros_control.so">
