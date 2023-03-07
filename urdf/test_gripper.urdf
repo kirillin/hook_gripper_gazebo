@@ -48,9 +48,9 @@
 
   <gazebo reference="gripper">
     <material>Gazebo/Green</material>
-    <!-- <mu1>1</mu1> -->
-    <!-- <mu2>1</mu2> -->
-    <kp>100</kp>
+    <mu1>0.0</mu1>
+    <mu2>0.0</mu2>
+    <kp>1</kp>
     <kd>1</kd>
   </gazebo>
 
@@ -61,20 +61,9 @@
       <gripper_link_name>gripper</gripper_link_name>
       <objects_robot_name>box</objects_robot_name>
       <objects_link_name>box1</objects_link_name>
-      <min_collision_depth>0.01</min_collision_depth>
+      <min_collision_depth>0.001</min_collision_depth>
     </plugin>
   </gazebo>
-
-  <!-- <gazebo reference="gripper">
-    <sensor name='my_contact' type='contact'>
-      <plugin name="contact_plugin" filename="libcontact_plugin.so">
-        <contact>
-          <collision>box_collision</collision>
-        </contact>
-        <update_rate> 5 </update_rate>
-      </plugin>
-    </sensor>
-  </gazebo> -->
 
   <gazebo>
     <plugin name="ros_control" filename="libgazebo_ros_control.so">

@@ -21,9 +21,5 @@
     <gazebo reference="box1">
       <!-- <static>true</static> -->
       <material>Gazebo/Red</material>
-      <!-- <mu1>1</mu1>
-      <mu2>1</mu2> -->
-      <!-- <kp>1</kp>
-      <kd>1</kd> -->
     </gazebo>
   </robot>
