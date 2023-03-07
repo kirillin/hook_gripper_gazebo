@@ -4,7 +4,7 @@
   <link name="world" />
 
   <joint name="joint" type="prismatic">
-    <origin xyz="0 0 0" rpy="0 0 0" />
+    <origin xyz="0 0 0" rpy="3.14 0 0" />
     <parent link="world" />
     <child link="gripper" />
     <axis xyz="0 0 1" />
@@ -21,17 +21,18 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <cylinder radius="0.05" length="0.1" />
-        <!-- <<mesh filename="../mesh/hook_gripper.dae" scale="1.0"/> -->
+        <!-- <cylinder radius="0.05" length="0.1" /> -->
+        <mesh filename="package://hook_gripper_gazebo/meshes/hook_gripper.dae"/>
       </geometry>
-      <material name="Cyan">
-        <color rgba="0 1.0 1.0 1.0" />
+      <material name="Grey">
+        <color rgba="0.3 0.3 0.3 1.0" />
       </material>
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <cylinder radius="0.05" length="0.1" />
+        <!-- <cylinder radius="0.05" length="0.1" /> -->
+        <mesh filename="package://hook_gripper_gazebo/meshes/hook_gripper.dae"/>
       </geometry>
     </collision>
   </link>
@@ -50,8 +51,8 @@
     <material>Gazebo/Green</material>
     <mu1>0.0</mu1>
     <mu2>0.0</mu2>
-    <kp>1</kp>
-    <kd>1</kd>
+    <kp>0</kp>
+    <kd>0</kd>
   </gazebo>
 
 

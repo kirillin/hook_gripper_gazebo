@@ -7,7 +7,7 @@ namespace gazebo
     HookGripperPlugin::HookGripperPlugin() {}
     HookGripperPlugin::~HookGripperPlugin() 
     {
-        this->update_connection_.reset();
+        this->update_connection.reset();
 
         rosQueue.clear();
         rosQueue.disable();
@@ -69,12 +69,12 @@ namespace gazebo
         {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "gazebo_hook_gripper_client", ros::init_options::NoSigintHandler);
+            ros::init(argc, argv, this->gripper_link_name, ros::init_options::NoSigintHandler);
         }
 
         ROS_INFO("Loading gazebo_hook_gripper_client");
 
-        this->rosNode.reset(new ros::NodeHandle("gazebo_hook_gripper_client"));
+        this->rosNode.reset(new ros::NodeHandle(this->gripper_link_name));
 
         // ready to attach publisher
         ros::AdvertiseOptions ao = ros::AdvertiseOptions::create<std_msgs::Bool>(
@@ -103,7 +103,6 @@ namespace gazebo
         this->rosQueueThread = std::thread(std::bind(&HookGripperPlugin::QueueThread, this));
 
         update_connection = event::Events::ConnectWorldUpdateBegin(std::bind(&HookGripperPlugin::OnUpdate, this));
-        reset_connection = event::Events::ConnectWorldReset(std::bind(&HookGripperPlugin::OnReset, this));
 
         gzmsg << "Loaded " << PLUGIN_NAME << std::endl;
     }
