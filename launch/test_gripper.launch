@@ -12,6 +12,7 @@
 
   <param name="obj_description" command="$(find xacro)/xacro --inorder '$(find hook_gripper_gazebo)/urdf/box.urdf'"/>
   <node name="obj_urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-z 0.5 -urdf -model box -param obj_description"/>
+  <!-- <node name="obj2_urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-z 0.5 -urdf -model boox -param obj_description"/> -->
 
   <node name="state_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
     output="screen" args="joint_state_controller" />

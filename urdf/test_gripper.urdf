@@ -1,37 +1,37 @@
 <?xml version="1.0"?>
 <robot name="test_gripper" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <link name="world"/>
+  <link name="world" />
 
   <joint name="joint" type="prismatic">
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-    <parent link="world"/>
-    <child link="gripper"/>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="world" />
+    <child link="gripper" />
     <axis xyz="0 0 1" />
-    <limit effort="300" velocity="1.0" lower="-1" upper="1"/>
-    <dynamics damping="0.0"/>
+    <limit effort="300" velocity="1.0" lower="-1" upper="1" />
+    <dynamics damping="0.0" />
   </joint>
-  
+
   <link name="gripper">
     <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="1"/>
-      <inertia ixx="0.01"  ixy="0"  ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="1" />
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <cylinder radius="0.05" length="0.1"/>
+        <cylinder radius="0.05" length="0.1" />
         <!-- <<mesh filename="../mesh/hook_gripper.dae" scale="1.0"/> -->
       </geometry>
       <material name="Cyan">
-        <color rgba="0 1.0 1.0 1.0"/>
+        <color rgba="0 1.0 1.0 1.0" />
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <cylinder radius="0.05" length="0.1"/>
+        <cylinder radius="0.05" length="0.1" />
       </geometry>
     </collision>
   </link>
@@ -39,16 +39,29 @@
   <transmission name="trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="joint">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor">
-        <mechanicalReduction>1</mechanicalReduction>
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
-</transmission>
+  </transmission>
+
+  <gazebo reference="gripper">
+    <material>Gazebo/Green</material>
+    <!-- <mu1>1</mu1> -->
+    <!-- <mu2>1</mu2> -->
+    <kp>100</kp>
+    <kd>1</kd>
+  </gazebo>
+
 
   <gazebo>
     <plugin name="hook_gripper" filename="libhook_gripper_gazebo.so">
+      <gripper_robot_name>test_gripper</gripper_robot_name>
       <gripper_link_name>gripper</gripper_link_name>
+      <objects_robot_name>box</objects_robot_name>
+      <objects_link_name>box1</objects_link_name>
+      <min_collision_depth>0.01</min_collision_depth>
     </plugin>
   </gazebo>
 
@@ -65,7 +78,7 @@
 
   <gazebo>
     <plugin name="ros_control" filename="libgazebo_ros_control.so">
-        <robotParam>robot_description</robotParam>
+      <robotParam>robot_description</robotParam>
     </plugin>
   </gazebo>
 
