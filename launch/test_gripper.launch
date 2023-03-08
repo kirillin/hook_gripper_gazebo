@@ -5,23 +5,28 @@
     <arg name="verbose" value="true"/>
     <arg name="gui" value="true"/>    
   </include>
-  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find hook_gripper_gazebo)/urdf/test_gripper.urdf'"/>
-  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-z 1.0 -urdf -model test_gripper -param robot_description"/>
+
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find hook_gripper_gazebo)/robots/gripper.urdf.xacro'"/>
+
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-z 1.0 -urdf -model hook_gripper -param robot_description"/>
+  
   <!-- <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" /> -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />  
 
+  <!-- spawn several objects to grasp -->
   <param name="obj_description" command="$(find xacro)/xacro --inorder '$(find hook_gripper_gazebo)/urdf/box.urdf'"/>
   <node name="obj_urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-z 0.5 -urdf -model box -param obj_description"/>
   <node name="obj2_urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-z 0.5 -urdf -model box2 -param obj_description"/>
   <node name="obj3_urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-z 0.5 -urdf -model box3 -param obj_description"/>
 
+  <!-- start controllers for 1-dof robot -->
   <node name="state_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
     output="screen" args="joint_state_controller" />
 
     <rosparam file="$(find hook_gripper_gazebo)/config/controller.yaml" command="load" subst_value="true"/>
     <node name="robot_ceiling_base_controller" pkg="controller_manager" type="spawner" output="screen" 
         args="
-            controller
+             controller
         "
     />
 

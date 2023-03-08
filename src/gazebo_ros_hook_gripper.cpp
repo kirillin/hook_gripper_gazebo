@@ -45,18 +45,31 @@ namespace gazebo
             this->gripper_robot_name = gripper_robot_name->Get<std::string>();
             this->gripper_link_name = gripper_link_name->Get<std::string>();
             this->objects_robot_name = objects_robot_name->Get<std::string>(); // must be complex name to be unique for grasping objects in a world
-            this->objects_link_name = objects_robot_name->Get<std::string>();
+            this->objects_link_name = objects_link_name->Get<std::string>();
             // this->min_collision_depth = 0.01;
             this->min_collision_depth = (double) min_collision_depth_elem->Get<double>();
         }
         
-        //test_gripper::gripper::gripper_collision
-        this->gripper_collision = this->gripper_robot_name + "::" + this->gripper_link_name + "::" + this->gripper_link_name + "_collision";
+        // this->gripper_collision = this->gripper_robot_name + "::" + this->gripper_link_name + "::" + this->gripper_link_name + "_collision";
+        this->gripper_collision = this->gripper_link_name + "_collision";
         this->objects_collision = this->objects_robot_name + "::" + this->objects_link_name + "::" + this->objects_link_name + "_collision";
 
         // SETUP GRIPPER
         std::string palmLinkName = this->gripper_link_name;
         this->palmLink = this->model->GetLink(palmLinkName);
+    
+        if (!this->palmLink) // motivated by vacuum gripper
+        {
+            std::string found;
+            physics::Link_V links = this->model->GetLinks();
+            for (size_t i = 0; i < links.size(); i++) {
+                found += std::string(" ") + links[i]->GetName();
+            }
+            ROS_FATAL_NAMED("hook_gripper", "libhook_gripper_gazebo plugin error: link named: %s does not exist", palmLinkName.c_str());
+            ROS_FATAL_NAMED("hook_gripper", "libhook_gripper_gazebo plugin error: Last joint must be not fixed type!");
+            ROS_FATAL_NAMED("hook_gripper", "libhook_gripper_gazebo plugin error: Found links are: %s", found.c_str());
+            return;
+        }
     
         // SETUP COLLISIONS SUBSCRIPTION
         this->transport_node = transport::NodePtr(new transport::Node());
@@ -158,6 +171,9 @@ namespace gazebo
         {
             std::string c1 = contacts.contact(i).collision1();
             std::string c2 = contacts.contact(i).collision2();
+            
+            // gzmsg << c1 << "\t" << c2 << std::endl;
+
             if (!c1.empty() && !c2.empty()) {
 
                 // check if gripper and ok-to-grasp object in collision
@@ -180,6 +196,10 @@ namespace gazebo
 
     void HookGripperPlugin::Attach() 
     {
+
+        // gzmsg << this->grasping_model_name << std::endl;
+        // gzmsg << this->palmLink->GetName() << std::endl;
+        
     
         physics::ModelPtr obj = this->model->GetWorld()->ModelByName(this->grasping_model_name);
         std::cerr << obj->GetLink()->WorldPose() << std::endl;
@@ -206,6 +226,7 @@ namespace gazebo
 
     void HookGripperPlugin::OnUpdate()
     {
+        
         // if ready to attach
         std_msgs::Bool grasping_msg;
         if (this->ready_to_attach) {

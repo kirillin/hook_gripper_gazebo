@@ -1,18 +1,22 @@
 <?xml version="1.0"?>
-<robot name="test_gripper" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="hook_gripper" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+  <xacro:include filename="$(find hook_gripper_gazebo)/urdf/hook_gripper.urdf.xacro" />
+  <xacro:arg name="prefix" default="" />
+
+  <!-- Desribe 1-dof robot -->
   <link name="world" />
 
   <joint name="joint" type="prismatic">
     <origin xyz="0 0 0" rpy="3.14 0 0" />
     <parent link="world" />
-    <child link="gripper" />
+    <child link="tool0" />
     <axis xyz="0 0 1" />
     <limit effort="300" velocity="1.0" lower="-1" upper="1" />
     <dynamics damping="0.0" />
   </joint>
 
-  <link name="gripper">
+  <link name="tool0">
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <mass value="1" />
@@ -21,18 +25,16 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <!-- <cylinder radius="0.05" length="0.1" /> -->
-        <mesh filename="package://hook_gripper_gazebo/meshes/hook_gripper.dae"/>
+        <cylinder radius="0.05" length="0.01" />
       </geometry>
       <material name="Grey">
-        <color rgba="0.3 0.3 0.3 1.0" />
+        <color rgba="1.0 0.3 0.3 1.0" />
       </material>
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <!-- <cylinder radius="0.05" length="0.1" /> -->
-        <mesh filename="package://hook_gripper_gazebo/meshes/hook_gripper.dae"/>
+        <cylinder radius="0.05" length="0.01" />
       </geometry>
     </collision>
   </link>
@@ -47,29 +49,14 @@
     </actuator>
   </transmission>
 
-  <gazebo reference="gripper">
-    <material>Gazebo/Green</material>
-    <mu1>0.0</mu1>
-    <mu2>0.0</mu2>
-    <kp>0</kp>
-    <kd>0</kd>
-  </gazebo>
-
-
-  <gazebo>
-    <plugin name="hook_gripper" filename="libhook_gripper_gazebo.so">
-      <gripper_robot_name>test_gripper</gripper_robot_name>
-      <gripper_link_name>gripper</gripper_link_name>
-      <objects_robot_name>box</objects_robot_name>
-      <objects_link_name>box1</objects_link_name>
-      <min_collision_depth>0.001</min_collision_depth>
-    </plugin>
-  </gazebo>
-
   <gazebo>
     <plugin name="ros_control" filename="libgazebo_ros_control.so">
       <robotParam>robot_description</robotParam>
     </plugin>
   </gazebo>
+
+
+  <!-- connect to 1-dof robot The Hook fripper -->
+  <xacro:hook_gripper prefix="$(arg prefix)" parent="tool0" obj="box" obj_link="box1" />
 
 </robot>

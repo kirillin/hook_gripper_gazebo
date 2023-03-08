@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<robot name="hook_gripper" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:property name="M_PI" value="3.1415926535897931" />
+
+  <xacro:macro name="hook_gripper" params="prefix parent obj:=box obj_link:=box1">
+
+    <joint name="${prefix}joint_to_arm" type="revolute">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <parent link="${parent}" />
+      <child link="gripper" />
+      <axis xyz="0 0 1" />
+      <limit effort="1" velocity="1.0" lower="0" upper="0" />
+      <dynamics damping="0.0" />      
+    </joint>
+
+    <link name="${prefix}gripper">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="1" />
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <!-- <cylinder radius="0.05" length="0.1" /> -->
+          <mesh filename="package://hook_gripper_gazebo/meshes/hook_gripper.dae" />
+        </geometry>
+        <material name="Grey">
+          <color rgba="0.3 0.3 0.3 1.0" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <!-- <cylinder radius="0.05" length="0.1" /> -->
+          <mesh filename="package://hook_gripper_gazebo/meshes/hook_gripper.dae" />
+        </geometry>
+      </collision>
+    </link>
+
+    <gazebo reference="${prefix}gripper">
+      <material>Gazebo/Green</material>
+      <mu1>0.0</mu1>
+      <mu2>0.0</mu2>
+      <kp>0</kp>
+      <kd>0</kd>
+    </gazebo>
+
+    <gazebo>
+      <plugin name="${prefix}hook_gripper" filename="libhook_gripper_gazebo.so">
+        <gripper_robot_name>hook_gripper</gripper_robot_name>
+        <gripper_link_name>${prefix}gripper</gripper_link_name>
+        <objects_robot_name>${obj}</objects_robot_name>
+        <objects_link_name>${obj_link}</objects_link_name>
+        <min_collision_depth>0.001</min_collision_depth>
+      </plugin>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>
