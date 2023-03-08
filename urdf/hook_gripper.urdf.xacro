@@ -3,12 +3,13 @@
 
   <xacro:property name="M_PI" value="3.1415926535897931" />
 
-  <xacro:macro name="hook_gripper" params="prefix parent obj:=box obj_link:=box1">
+  <xacro:macro name="hook_gripper" params="prefix parent *origin obj:=box obj_link:=box1">
 
     <joint name="${prefix}joint_to_arm" type="revolute">
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <!-- <origin xyz="0 0 0" rpy="0 0 0" /> -->
+      <xacro:insert_block name="origin"/>
       <parent link="${parent}" />
-      <child link="gripper" />
+      <child link="${prefix}gripper" />
       <axis xyz="0 0 1" />
       <limit effort="1" velocity="1.0" lower="0" upper="0" />
       <dynamics damping="0.0" />      
@@ -24,7 +25,7 @@
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
           <!-- <cylinder radius="0.05" length="0.1" /> -->
-          <mesh filename="package://hook_gripper_gazebo/meshes/hook_gripper.dae" />
+          <mesh filename="package://hook_gripper_gazebo/meshes/hook_gripper.dae" scale="1.05 1.05 1.05"/>
         </geometry>
         <material name="Grey">
           <color rgba="0.3 0.3 0.3 1.0" />
@@ -34,13 +35,13 @@
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
           <!-- <cylinder radius="0.05" length="0.1" /> -->
-          <mesh filename="package://hook_gripper_gazebo/meshes/hook_gripper.dae" />
+          <mesh filename="package://hook_gripper_gazebo/meshes/hook_gripper.dae" scale="1.05 1.05 1.05"/>
         </geometry>
       </collision>
     </link>
 
     <gazebo reference="${prefix}gripper">
-      <material>Gazebo/Green</material>
+      <material>Gazebo/Grey</material>
       <mu1>0.0</mu1>
       <mu2>0.0</mu2>
       <kp>0</kp>

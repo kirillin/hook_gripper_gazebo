@@ -56,7 +56,9 @@
   </gazebo>
 
 
-  <!-- connect to 1-dof robot The Hook fripper -->
-  <xacro:hook_gripper prefix="$(arg prefix)" parent="tool0" obj="box" obj_link="box1" />
+  <!-- connect to 1-dof robot The Hook gripper -->
+  <xacro:hook_gripper prefix="$(arg prefix)" parent="tool0" obj="box" obj_link="box1">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:hook_gripper>
 
 </robot>
