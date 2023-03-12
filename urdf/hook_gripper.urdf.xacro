@@ -32,20 +32,20 @@
         </material>
       </visual>
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0 0 0.05" rpy="0 0 0" />
         <geometry>
-          <!-- <cylinder radius="0.05" length="0.1" /> -->
-          <mesh filename="package://hook_gripper_gazebo/meshes/hook_gripper.dae" scale="1.05 1.05 1.05"/>
+          <cylinder radius="0.01" length="0.1" />
+          <!-- <mesh filename="package://hook_gripper_gazebo/meshes/hook_gripper.dae" scale="1.05 1.05 1.05"/> -->
         </geometry>
       </collision>
     </link>
 
     <gazebo reference="${prefix}gripper">
       <material>Gazebo/Grey</material>
-      <mu1>0.0</mu1>
-      <mu2>0.0</mu2>
-      <kp>0</kp>
-      <kd>0</kd>
+      <mu1>0.5</mu1>
+      <mu2>0.5</mu2>
+      <kp>1e8</kp>
+      <kd>1e7</kd>
     </gazebo>
 
     <gazebo>

@@ -197,6 +197,9 @@ namespace gazebo
     void HookGripperPlugin::Attach() 
     {
 
+        ignition::math::Vector3d force(0,0,0);
+        this->palmLink->AddForce(force);
+
         // gzmsg << this->grasping_model_name << std::endl;
         // gzmsg << this->palmLink->GetName() << std::endl;
         
@@ -221,6 +224,10 @@ namespace gazebo
     void HookGripperPlugin::Detach() {
         this->fixedJoint->Detach();
         this->fixedJoint->Fini();
+        
+        ignition::math::Vector3d force(0,0,-100);
+        this->palmLink->AddForce(force);
+        
         attached = !attached;
     }
 
