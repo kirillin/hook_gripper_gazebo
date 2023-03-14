@@ -196,34 +196,42 @@ namespace gazebo
 
     void HookGripperPlugin::Attach() 
     {
+        try{
+            ignition::math::Vector3d force(0,0,0);
+            this->palmLink->AddForce(force);
+        } catch (...) {
+            ROS_INFO("Try attaching...");
+        }
 
-        ignition::math::Vector3d force(0,0,0);
-        this->palmLink->AddForce(force);
-
-        // gzmsg << this->grasping_model_name << std::endl;
-        // gzmsg << this->palmLink->GetName() << std::endl;
+        try{        
+            // gzmsg << this->grasping_model_name << std::endl;
+            // gzmsg << this->palmLink->GetName() << std::endl;
+            ROS_INFO("Try attaching...");
         
-    
-        physics::ModelPtr obj = this->model->GetWorld()->ModelByName(this->grasping_model_name);
-        std::cerr << obj->GetLink()->WorldPose() << std::endl;
-        std::cerr << this->palmLink->WorldPose() << std::endl;
+            physics::ModelPtr obj = this->model->GetWorld()->ModelByName(this->grasping_model_name);
+            std::cerr << obj->GetLink()->WorldPose() << std::endl;
+            std::cerr << this->palmLink->WorldPose() << std::endl;
 
-        ignition::math::Pose3d diff = obj->GetLink()->WorldPose() - this->palmLink->WorldPose();
+            ignition::math::Pose3d diff = obj->GetLink()->WorldPose() - this->palmLink->WorldPose();
 
-        physics::PhysicsEnginePtr physics = this->model->GetWorld()->Physics();
-        this->fixedJoint = physics->CreateJoint("revolute"); // TODO move to constructor
+            physics::PhysicsEnginePtr physics = this->model->GetWorld()->Physics();
+            this->fixedJoint = physics->CreateJoint("revolute"); // TODO move to constructor
 
-        // this->fixedJoint->Reset();
-        this->fixedJoint->SetName("virtual_joint");
-        this->fixedJoint->AddType(gazebo::physics::Base::FIXED_JOINT);
-        this->fixedJoint->Attach(this->palmLink, obj->GetLink());
-        
-        attached = !attached;
+            // this->fixedJoint->Reset();
+            this->fixedJoint->SetName("virtual_joint");
+            this->fixedJoint->AddType(gazebo::physics::Base::FIXED_JOINT);
+            this->fixedJoint->Attach(this->palmLink, obj->GetLink());
+            
+            attached = !attached;
+        } catch (...) {
+            ROS_INFO("Try attaching... trycatch");
+        }
     }
 
     void HookGripperPlugin::Detach() {
        
         try{
+            ROS_INFO("Try detaching...");
             if (this->fixedJoint) {
                 this->fixedJoint->Detach();
                 this->fixedJoint->Fini();
@@ -235,7 +243,7 @@ namespace gazebo
             this->palmLink->AddForce(force);
         
         } catch (...) {
-            ROS_INFO("Try detaching...");
+            ROS_INFO("Try detaching... trycatch");
         }
         
     }
