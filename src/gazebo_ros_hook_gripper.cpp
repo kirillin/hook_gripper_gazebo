@@ -222,13 +222,22 @@ namespace gazebo
     }
 
     void HookGripperPlugin::Detach() {
-        this->fixedJoint->Detach();
-        this->fixedJoint->Fini();
+       
+        try{
+            if (this->fixedJoint) {
+                this->fixedJoint->Detach();
+                this->fixedJoint->Fini();
+                this->fixedJoint.reset();
+                attached = !attached;
+            }
+            
+            ignition::math::Vector3d force(0,0,-100);
+            this->palmLink->AddForce(force);
         
-        ignition::math::Vector3d force(0,0,-100);
-        this->palmLink->AddForce(force);
+        } catch (...) {
+            ROS_INFO("Try detaching...");
+        }
         
-        attached = !attached;
     }
 
     void HookGripperPlugin::OnUpdate()
